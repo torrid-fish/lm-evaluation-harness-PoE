@@ -1368,7 +1368,7 @@ class HFLM(TemplateLM):
         return model_info
 
     def get_expert_frequency(self):
-        if callable(getattr(self.model, "get_expert_frequency")):
+        if callable(getattr(self.model, "get_expert_frequency", None)):
             return self.model.get_expert_frequency()
         else:
             return None
