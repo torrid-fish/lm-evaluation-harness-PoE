@@ -1,4 +1,10 @@
-# Language Model Evaluation Harness
+# Language Model Evaluation Harness PoE
+
+> [!warning]
+> This is a revised version of evaluation tool so that we can better conduct our research of PoE.
+> There are few modifications we've made:
+> * **Save path simplified**: Rather than store the result under the folder, we can directly assign file path.
+> * **Routre frequency output**: Since we would like to inspect the frequency of each experts, we need to log them into the json file.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10256836.svg)](https://doi.org/10.5281/zenodo.10256836)
 

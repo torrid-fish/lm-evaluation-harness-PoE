@@ -62,6 +62,7 @@ def simple_evaluate(
     check_integrity: bool = False,
     write_out: bool = False,
     log_samples: bool = True,
+    log_frequency: bool = False,
     evaluation_tracker: Optional[EvaluationTracker] = None,
     system_instruction: Optional[str] = None,
     apply_chat_template: Union[bool, str] = False,
@@ -110,6 +111,8 @@ def simple_evaluate(
         If True, write out an example document and model input for checking task integrity
     :param log_samples: bool
         If True, write out all model outputs and documents for per-sample measurement and post-hoc analysis
+    :param log_frequency: bool
+        If True, write out the frequency of each expters in each layer (PoE only)
     :param system_instruction: str
         System instruction to be applied to the prompt
     :param apply_chat_template: Union[bool, str]
@@ -307,6 +310,7 @@ def simple_evaluate(
         bootstrap_iters=bootstrap_iters,
         write_out=write_out,
         log_samples=True if predict_only else log_samples,
+        log_frequency=log_frequency,
         system_instruction=system_instruction,
         apply_chat_template=apply_chat_template,
         fewshot_as_multiturn=fewshot_as_multiturn,
@@ -366,6 +370,7 @@ def evaluate(
     bootstrap_iters: Optional[int] = 100000,
     write_out: bool = False,
     log_samples: bool = True,
+    log_frequency: bool = False,
     system_instruction: Optional[str] = None,
     apply_chat_template: Union[bool, str] = False,
     fewshot_as_multiturn: bool = False,
@@ -385,6 +390,8 @@ def evaluate(
         If True, write out an example document and model input for checking task integrity
     :param log_samples: bool
         If True, write out all model outputs and documents for per-sample measurement and post-hoc analysis
+    :param log_frequency: bool
+        If True, write out the frequency of each expters in each layer (PoE only)
     :param system_instruction: str
         System instruction to be applied to the prompt
     :param apply_chat_template: Union[bool, str]
@@ -664,6 +671,13 @@ def evaluate(
         }
         if log_samples:
             results_dict["samples"] = dict(samples)
+        
+        if log_frequency:
+            assert callable(getattr(lm, "get_expert_frequency")), f"The model being used is not PoE architecture!"  
+            expert_frequency = []
+            for distribution in lm.get_expert_frequency():
+                expert_frequency.append(distribution.detach().cpu().numpy().tolist())
+            results["expert_frequency"] = expert_frequency
 
         return results_dict
 
