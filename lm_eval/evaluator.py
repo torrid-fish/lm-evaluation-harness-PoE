@@ -673,10 +673,10 @@ def evaluate(
             results_dict["samples"] = dict(samples)
         
         if log_frequency:
-            assert callable(getattr(lm, "get_expert_frequency")), f"The model being used is not PoE architecture!"  
             expert_frequency = []
             for distribution in lm.get_expert_frequency():
                 expert_frequency.append(distribution.detach().cpu().numpy().tolist())
+            # If the model is not PoE-based, then the result will be `None`
             results["expert_frequency"] = expert_frequency
 
         return results_dict

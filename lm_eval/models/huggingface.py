@@ -1366,3 +1366,9 @@ class HFLM(TemplateLM):
         if self.delta:
             model_info["delta_sha"] = get_model_sha(self.delta, self.revision)
         return model_info
+
+    def get_expert_frequency(self):
+        if callable(getattr(self.model, "get_expert_frequency")):
+            return self.model.get_expert_frequency()
+        else:
+            return None
