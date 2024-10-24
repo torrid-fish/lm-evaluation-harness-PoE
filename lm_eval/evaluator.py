@@ -675,7 +675,7 @@ def evaluate(
         if log_frequency:
             expert_frequency = []
             for distribution in lm.get_expert_frequency():
-                expert_frequency.append(distribution.detach().cpu().numpy().tolist())
+                expert_frequency.append(distribution)
             # If the model is not PoE-based, then the result will be `None`
             results_dict["expert_frequency"] = expert_frequency
 
