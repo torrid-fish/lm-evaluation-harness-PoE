@@ -300,6 +300,8 @@ def simple_evaluate(
             chat_template=lm.chat_template(apply_chat_template),
             fewshot_as_multiturn=fewshot_as_multiturn,
         )
+        
+    begin_evaluate_time = time.time()
 
     results = evaluate(
         lm=lm,
@@ -316,6 +318,9 @@ def simple_evaluate(
         fewshot_as_multiturn=fewshot_as_multiturn,
         verbosity=verbosity,
     )
+    
+    results["duration"] = (time.time() - begin_evaluate_time) / 60 # In the unit of minutes
+    
 
     if lm.rank == 0:
         if isinstance(model, str):
